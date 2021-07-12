@@ -22,7 +22,7 @@ function verifyUserExists(req, res, next){
 
 function getBalance(statement){
     const balance = statement.reduce((acc, operation) => {
-        if(statement.type === 'deposit'){
+        if( operation.type === 'deposit' ){
             return acc + operation.amount;
         } else {
             return acc - operation.amount;
@@ -53,7 +53,7 @@ app.post("/account", (req, res) => {
 app.get("/account", verifyUserExists, (req, res) => {
     const { customer } = req;
 
-    return res.json({customer});
+    return res.json(customer);
 });
 
 app.get("/statement", verifyUserExists, (req, res) => {
@@ -84,6 +84,8 @@ app.post("/statement/withdraw", verifyUserExists, (req, res) => {
 
     const balance = getBalance(customer.statement);
 
+    console.log(balance, " ", amount);
+
     if( balance < amount) {
         return res.status(400).json({ Error: "Insufficient funds!"});
     }
@@ -100,7 +102,7 @@ app.post("/statement/withdraw", verifyUserExists, (req, res) => {
 });
 
 app.put("/account", verifyUserExists, (req, res) => {
-    const { name } = req.body;
+    const { name } = req.headers;
     const { customer } = req;
 
     customer.name = name;
@@ -109,7 +111,11 @@ app.put("/account", verifyUserExists, (req, res) => {
 });
 
 app.delete("/account", verifyUserExists, (req, res) => {
-    //
-})
+    const { customer } = req;
+
+    customers.splice(customer, 1);
+
+    return res.status(201).send();
+});
 
 app.listen(3333);
