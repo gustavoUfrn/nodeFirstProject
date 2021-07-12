@@ -115,13 +115,9 @@ app.put("/account", verifyUserExists, (req, res) => {
 app.delete("/account", verifyUserExists, (req, res) => {
     const { customer } = req;
 
-    customers.splice(customer, 1);
+    customers.splice(customers.indexOf(customer), 1);
 
-    return res.status(201).send();
-});
-
-app.post("/allUsers", (req, res) => {
-    return res.send(customers);
+    return res.status(201).send(customers);
 });
 
 app.listen(3333);
