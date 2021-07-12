@@ -6,7 +6,7 @@ app.use(express.json());
 
 const customer = [];
 
-app.post("/", (req, res) => {
+app.post("/account", (req, res) => {
     const { name, cpf } = req.body;
 
     customer.push({
