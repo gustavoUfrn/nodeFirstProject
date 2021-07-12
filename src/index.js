@@ -1,8 +1,10 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const { v4 : uuidV4 } = require("uuid");
 
 app.use(express.json());
+app.use(bodyParser.json());
 
 const customers = [];
 
@@ -102,7 +104,7 @@ app.post("/statement/withdraw", verifyUserExists, (req, res) => {
 });
 
 app.put("/account", verifyUserExists, (req, res) => {
-    const { name } = req.headers;
+    const { name } = req.body;
     const { customer } = req;
 
     customer.name = name;
@@ -116,6 +118,10 @@ app.delete("/account", verifyUserExists, (req, res) => {
     customers.splice(customer, 1);
 
     return res.status(201).send();
+});
+
+app.post("/allUsers", (req, res) => {
+    return res.send(customers);
 });
 
 app.listen(3333);
